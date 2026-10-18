@@ -18,6 +18,19 @@
 
 The checkbox makes a sibling inside the form suspend once during the transition render that delivers `lastResult`. That's a deterministic way to make React throw that render away and render again.
 
+### Automated
+
+```sh
+pnpm install
+pnpm exec playwright install chromium
+pnpm test
+```
+
+[`tests/repro.spec.ts`](tests/repro.spec.ts) has two tests:
+
+- **control:** no discarded render, and the form resets. Passes.
+- **bug:** the render that receives `lastResult` is discarded. It **fails on 1.21.2**, because the input keeps `"hello"`. It should pass once this is fixed.
+
 ## Cause
 
 In `dist/future/hooks.mjs` (`useConform`), the result is marked as handled and applied during render:
